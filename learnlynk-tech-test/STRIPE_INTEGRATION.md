@@ -1,0 +1,5 @@
+Here is the 8–12 line explanation covering all the required points for Section 5:
+
+To handle this flow, I’d start by building an API endpoint on the backend that creates a Stripe Checkout Session with the fee amount and some metadata, such as the relevant application ID. Before sending the checkout link back to the client, the system would also save a new entry in a payment_requests table, storing the session ID and marking it as “pending” so we can track the attempt.
+
+On the completion side, I’d add a webhook that listens for Stripe’s checkout.session.completed event. When Stripe notifies us, the backend would verify the event signature for security, look up the matching session in our database, and update its status to “paid.” After confirming the payment, the backend would move the application forward to the next stage—such as switching it from payment_pending to submitted—and record the update in the application’s timeline for audit/history purposes.
